@@ -532,6 +532,19 @@ void angle_control(void)
   }
 }
 
+void Linetrace(void)
+{
+  float Line_range;
+
+  //Get phi ref
+  Phi_ref = ;
+
+  //Get phi err
+  
+}
+
+
+
 void logging(void)
 {  
   //Logging
