@@ -532,6 +532,13 @@ void angle_control(void)
   }
 }
 
+void linetrace(void)
+{
+  //For line trace function
+  
+}
+
+
 void logging(void)
 {  
   //Logging
