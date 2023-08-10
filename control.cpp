@@ -536,14 +536,13 @@ void angle_control(void)
 //ライントレース
 void linetrace(void)
 {
-  float Linetrace_range;
+  float Line_range;
   float phi_range;
   float phi_ref;
   float phi_err;
   float phi_com;
 
-  //float phi_com;
-
+  phi_ref = 0;
   phi_pid.set_parameter(1,1,1,1,1);
   sensor_read();
 
@@ -551,12 +550,11 @@ void linetrace(void)
 
   phi_ref = Phi_ref;
 
-  T_ref = 0.6 * BATTERY_VOLTAGE*(float)(Chdata[2]-CH3MIN)/(CH3MAX-CH3MIN);
 
   P_com = p_pid.update(phi_err);
 
 
-  phi_err   = Phi_ref   - (Linetrace_range  - Phi_bias);
+  phi_err   = Phi_ref   - (Line_range  - Phi_bias);
 
   phi_range = Phi - Phi_bias;
 
