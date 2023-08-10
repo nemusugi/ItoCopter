@@ -531,6 +531,7 @@ void angle_control(void)
 
   }
 }
+
 void linetrace(void)
 {
   PID Line_phi_pid;
@@ -550,6 +551,7 @@ void linetrace(void)
   Line_Rref = Line_psi_pid.update(Line_psi_err);
   
 }
+
 void logging(void)
 {  
   //Logging
