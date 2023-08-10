@@ -1,4 +1,3 @@
-// mm
 #include "control.hpp"
 
 //Sensor data
