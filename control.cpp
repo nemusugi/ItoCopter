@@ -532,6 +532,47 @@ void angle_control(void)
   }
 }
 
+//#############################################################################
+//#############################################################################
+//
+// The Line Trace
+//
+//#############################################################################
+//#############################################################################
+
+#if 0
+//Kawasaki's code
+//----------------------------------------------------
+//ライントレース
+void linetrace(void)
+{
+  float Line_range;
+  float phi_range;
+  float phi_ref;
+  float phi_err;
+  float phi_com;
+
+  phi_ref = 0;
+  phi_pid.set_parameter(1,1,1,1,1);
+  sensor_read();
+
+  phi_range = Phi - Phi_bias;
+
+  phi_ref = Phi_ref;
+
+  P_com = p_pid.update(phi_err);
+
+  phi_err   = Phi_ref   - (Line_range  - Phi_bias);
+
+  phi_range = Phi - Phi_bias;
+
+  phi_com = phi_pid.update(phi_err);
+  
+}
+#endif
+
+//---------------------------------------------------------------------
+//Mizutani's code
 void linetrace(void)
 {
   PID trace_phi_pid;
@@ -556,9 +597,6 @@ void linetrace(void)
   Psi_com = trace_psi_pid.update(trace_psi_err);
   
 }
-  
-
-
 
 
 void logging(void)
@@ -682,7 +720,7 @@ void gyroCalibration(void)
     sumr=sumr+Wr;
   }
   Pbias=sump/N;
-  Qbias=sumq/N;
+  Qbias=sumq/N; 
   Rbias=sumr/N;
 }
 
