@@ -532,7 +532,7 @@ void angle_control(void)
   }
 }
 
-//------------------------------------------------
+//----------------------------------------------------
 //ライントレース
 void linetrace(void)
 {
@@ -550,9 +550,7 @@ void linetrace(void)
 
   phi_ref = Phi_ref;
 
-
   P_com = p_pid.update(phi_err);
-
 
   phi_err   = Phi_ref   - (Line_range  - Phi_bias);
 
@@ -562,7 +560,7 @@ void linetrace(void)
   
 }
 
-//--------------------------------------------------------
+//---------------------------------------------------------------------
 
 void logging(void)
 {  
