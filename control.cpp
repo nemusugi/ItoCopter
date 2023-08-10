@@ -532,6 +532,17 @@ void angle_control(void)
   }
 }
 
+//#############################################################################
+//#############################################################################
+//
+// The Line Trace
+//
+//#############################################################################
+//#############################################################################
+
+#if 0
+//Hara's code
+//----------------------------------------------------
 void linetrace(void)
 {
   PID Line_phi_pid;
@@ -551,6 +562,66 @@ void linetrace(void)
   Line_Rref = Line_psi_pid.update(Line_psi_err);
   
 }
+
+
+
+//Kawasaki's code
+//----------------------------------------------------
+//ライントレース
+void linetrace(void)
+{
+  float Line_range;
+  float phi_range;
+  float phi_ref;
+  float phi_err;
+  float phi_com;
+
+  phi_ref = 0;
+  phi_pid.set_parameter(1,1,1,1,1);
+  sensor_read();
+
+  phi_range = Phi - Phi_bias;
+
+  phi_ref = Phi_ref;
+
+  P_com = p_pid.update(phi_err);
+
+  phi_err   = Phi_ref   - (Line_range  - Phi_bias);
+
+  phi_range = Phi - Phi_bias;
+
+  phi_com = phi_pid.update(phi_err);
+  
+}
+#endif
+
+//---------------------------------------------------------------------
+//Mizutani's code
+void linetrace(void)
+{
+  PID trace_phi_pid;
+  PID trace_psi_pid;
+
+  float Line_range;
+  float trace_phi_err;
+  float trace_psi_err;
+  float Phi_com;
+  float Psi_com;
+
+  //angle controll
+  trace_phi_pid.set_parameter  ( 5.5, 9.5, 0.025, 0.018, 0.01);
+  trace_psi_pid.set_parameter  ( 0.0, 10.0, 0.010, 0.03, 0.01);
+
+  //Get phi,psi err
+  trace_phi_err = Line_range;
+  trace_psi_err = Line_range;
+
+  //PID LineTrace
+  Phi_com = trace_phi_pid.update(trace_phi_err);
+  Psi_com = trace_psi_pid.update(trace_psi_err);
+  
+}
+
 
 void logging(void)
 {  
@@ -673,7 +744,7 @@ void gyroCalibration(void)
     sumr=sumr+Wr;
   }
   Pbias=sump/N;
-  Qbias=sumq/N;
+  Qbias=sumq/N; 
   Rbias=sumr/N;
 }
 

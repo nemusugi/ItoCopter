@@ -9,7 +9,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 
 pico_sdk_init()
-include_directories(/home/hara/pico/eigen)
+#include_directories(/home/hara/pico/eigen)
+#include_directories(/home/ruiki/pico/eigen)
+include_directories(/home/mahiro/pico/eigen)
+
 
 add_executable(pico_copter
   pico_copter.cpp
