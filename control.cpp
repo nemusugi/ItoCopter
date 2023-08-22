@@ -532,13 +532,14 @@ void angle_control(void)
   }
 }
 
+//ライントレース用のPIDを試しに書く
 void linetrace(void)
 {
   PID Line_phi_pid;
   PID Line_psi_pid;
 
   float Line_range;
-  float Line_phi_err,Line_psi_err;
+  float Line_phi_err, Line_psi_err;
   float Line_Pref=0.0, Line_Rref=0.0;
 
   Line_phi_pid.set_parameter ( 1, 1, 1, 1, 1);
