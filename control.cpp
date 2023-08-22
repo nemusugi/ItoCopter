@@ -549,8 +549,7 @@ void linetrace(void)
   Line_psi_err = Line_range;
 
   Line_Pref = Line_phi_pid.update(Line_phi_err);
-  Line_Rref = Line_psi_pid.update(Line_psi_err);
-  
+  Line_Rref = Line_psi_pid.update(Line_psi_err); 
 }
 
 void logging(void)
@@ -674,7 +673,7 @@ void gyroCalibration(void)
     sumr=sumr+Wr;
   }
   Pbias=sump/N;
-  Qbias=sumq/N;
+  Qbias=sumq/N; 
   Rbias=sumr/N;
 }
 
