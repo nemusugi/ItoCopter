@@ -535,18 +535,18 @@ void angle_control(void)
 //ライントレース用のPIDを試しに書く
 void linetrace(void)
 {
-  PID Line_phi_pid;
+  PID Line_phi_pid;   //関数の外　60行目付近
   PID Line_psi_pid;
 
   float Line_range;
   float Line_phi_err, Line_psi_err;
   float Line_Pref=0.0, Line_Rref=0.0;
 
-  Line_phi_pid.set_parameter ( 1, 1, 1, 1, 1);
-  Line_psi_pid.set_parameter ( 1, 1, 1, 1, 1);
+  Line_phi_pid.set_parameter ( 1, 1, 1, 1, 1);   //毎回設定しなおす必要がないので関数の外に置く
+  Line_psi_pid.set_parameter ( 1, 1, 1, 1, 1);   //284行目付近のcontrollinitの中に
 
-  Line_phi_err = Line_range;
-  Line_psi_err = Line_range;
+  Line_phi_err = Line_range;   //目標引く今の値
+  Line_psi_err = Line_range;   //0 - Line_range
 
   Line_Pref = Line_phi_pid.update(Line_phi_err);
   Line_Rref = Line_psi_pid.update(Line_psi_err); 
