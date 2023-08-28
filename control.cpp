@@ -532,25 +532,133 @@ void angle_control(void)
   }
 }
 
+//------------------------------------------------------------------------------------------------------------------------------
 //ライントレース用のPIDを試しに書く
+PID Line_Y_pid;
+PID Line_psi_pid;
+PID Line_r_pid;
+PID Line_V_pid;
+PID Line_phi_pid;
+PID Line_p_pid;
+
+float Line_Y_ref = 0.0,Line_V_ref = 0.0;
+float Line_phi_ref = 0.0,Line_psi_ref = 0.0;
+float Line_p_ref = 0.0,Line_r_ref = 0.0;
+
+float Line_range;
+float Line_kalman;
+float Line_Y_com,Line_V_com;
+float Line_phi_com,Line_psi_com;
+float Line_p_com,Line_r_com;
+
+Line_Y_pid.set_parameter ( 1, 1, 1, 1, 1);
+Line_psi_pid.set_parameter ( 1, 1, 1, 1, 1);
+Line_r_pid.set_parameter ( 1, 1, 1, 1, 1);
+Line_V_pid.set_parameter ( 1, 1, 1, 1, 1);
+Line_phi_pid.set_parameter ( 1, 1, 1, 1, 1);
+Line_p_pid.set_parameter ( 1, 1, 1, 1, 1);
+
 void linetrace(void)
 {
-  PID Line_phi_pid;   //関数の外　60行目付近
-  PID Line_psi_pid;
+  float Line_Y_err,Line_V_err;
+  float Line_phi_err,Line_psi_err;
+  float Line_p_err,Line_r_err;
+  float Line_p_rate,Line_r_rate;
 
-  float Line_range;
-  float Line_phi_err, Line_psi_err;
-  float Line_Pref=0.0, Line_Rref=0.0;
 
-  Line_phi_pid.set_parameter ( 1, 1, 1, 1, 1);   //毎回設定しなおす必要がないので関数の外に置く
-  Line_psi_pid.set_parameter ( 1, 1, 1, 1, 1);   //284行目付近のcontrollinitの中に
+  Line_Y_err = Line_Y_ref - Line_range;
 
-  Line_phi_err = Line_range;   //目標引く今の値
-  Line_psi_err = Line_range;   //0 - Line_range
+  Line_Y_com = Line_Y_pid.update(Line_Y_err);
 
-  Line_Pref = Line_phi_pid.update(Line_phi_err);
-  Line_Rref = Line_psi_pid.update(Line_psi_err); 
+  if(40*pi()/180 <= Line_Y_com){
+    Line_psi_ref = 40*pi()/180;
+  }
+  else if(Line_Y_com <= -40*pi()/180){
+    Line_psi_ref = -40*pi()/180;
+  }
+  else{
+    Line_psi_ref = Line_Y_com;
+  }
+
+
+  Line_psi_err = Line_psi_ref - (Psi - Psi_bias);
+
+  Line_psi_com = Line_psi_pid.update(Line_psi_err);
+
+  if(180*pi()/180 <= Line_psi_com){
+    Line_r_ref = 180*pi()/180;
+  }
+  else if(Line_psi_com <= -180*pi()/180){
+    Line_r_ref = -180*pi()/180;
+  }
+  else{
+    Line_r_ref = Line_psi_com;
+  }
+
+
+  Line_r_rate = Wr - Rbias;
+  Line_r_err = Line_r_ref - Line_r_rate;
+
+  Line_r_com = Line_r_pid.update(Line_r_err);
+
+  if(7.4/2 <= Line_r_com){
+    Line_r_com = 7.4/2;
+  }
+  else if(Line_r_com <= -7.4/2){
+    Line_r_com = -7.4/2;
+  }
+  else{
+    Line_r_com = Line_r_com;
+  }
+
+
+  Line_V_err = Line_V_ref - Line_kalman;
+
+  Line_V_com = Line_V_pid.update(Line_V_err);
+
+  if(60*pi()/180 <= Line_V_com){
+    Line_phi_ref = 60*pi()/180;
+  }
+  else if(Line_V_com <= -60*pi()/180){
+    Line_phi_ref = -60*pi()/180;
+  }
+  else{
+    Line_phi_ref = Line_V_com;
+  }
+
+
+  Line_phi_err = Line_phi_ref - (Phi - Phi_bias);
+
+  Line_phi_com = Line_phi_pid.update(Line_phi_err);
+
+  if(180*pi()/180 <= Line_phi_com){
+    Line_p_ref = 180*pi()/180;
+  }
+  else if(Line_phi_com <= -180*pi()/180){
+    Line_p_ref = -180*pi()/180;
+  }
+  else{
+    Line_p_ref = Line_phi_com;
+  }
+
+
+  Line_p_rate = Wp - Pbias;
+  Line_p_err = Line_p_ref - Line_p_rate;
+
+  Line_p_com = Line_p_pid.update(Line_p_err);
+
+  if(7.4/2 <= Line_p_com){
+    Line_p_com = 7.4/2;
+  }
+  else if(Line_p_com <= -7.4/2){
+    Line_p_com = -7.4/2;
+  }
+  else{
+    Line_p_com = Line_p_com;
+  }
 }
+
+//------------------------------------------------------------------------------------------------------------------------------
 
 void logging(void)
 {  
